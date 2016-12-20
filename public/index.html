@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Simple Video Chat</title>
+	<meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="jumbotron text-center">
+      <h1>Simple Video Chat</h1>
+      <p>Call a different peer by typein it's id.</p>
+    </div>
+
+    <div class="container">
+
+      <div class="row">
+          <label for="peerId"><h3>your PeerId:</h3> </label>
+          <input id="peerId" type="text" readonly="true">
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+          <div class="col-xl-8">
+            <input id="peerIdInput" type="text" placeholder="Other Peer's ID">
+            <button type="button" id="connectToPeer">Call</button>
+          </div>
+      </div>
+    </div>
+
+<div class="container">
+  <div class="row">
+    <div class=".col-sm-3 video-size">
+      <div class="embed-responsive embed-responsive-4by3" >
+        <video class="embed-responsive-item" id="our-video" autoplay></video>
+      </div>
+    </div>
+      <div class=".col-sm-3 video-size">
+      <div class="embed-responsive embed-responsive-4by3" >
+        <video class="embed-responsive-item" id="their-video" autoplay></video>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </body>
+
+    <script src="http://cdn.peerjs.com/0.3/peer.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var peer = new Peer({
+        key: 'lwjd5qra8257b9' //todo: get api key
+      });
+
+      peer.on('open', function(id) {
+        $('#peerId').val(id);
+      });
+
+      peer.on('call', function(call) {
+        // Answer the call, providing our mediaStream
+        call.answer(window.ourStream);
+        listenForStream(call);
+      });
+
+      //different browser support
+      navigator.getUserMedia = navigator.getUserMedia ||navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+ $(function(){
+      $("#connectToPeer").click(function(){
+
+          var id = $('#peerIdInput').val();
+
+          //make a call to another peer
+          var call = peer.call(id, window.ourStream);
+          $('#peerIdInput').val('');
+
+          listenForStream(call);
+        return false;
+      });
+
+//get and display our stream
+      getMediaStream();
+  });
+
+
+      function listenForStream(call) {
+      //sender listenings for answer call
+        call.on('stream', function(stream) {
+        //add stream to html
+          console.log("received stream");
+          $('#their-video').prop('src', URL.createObjectURL(stream));
+        });
+      }
+
+      function getMediaStream() {
+        //set our media stream
+        navigator.getUserMedia({audio: false, video: true}, function(stream){
+          $('#our-video').prop('src', URL.createObjectURL(stream));
+          window.ourStream = stream;
+        },function(){ Console.log("getUserMedia() error"); });
+      }
+    </script>
+</html>
