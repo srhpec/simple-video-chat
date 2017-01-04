@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
-var http = require('http').Server(app);
+//var http = require('http').Server(app);
+
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html');
@@ -8,6 +9,8 @@ app.get('/', function(req, res){
 
 app.use(express.static('public'));
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
-});
+var server = require('http').createServer(app);
+
+app.use('/peerjs', require('peer').ExpressPeerServer(server, {debug: false}));
+
+server.listen(process.env.PORT);

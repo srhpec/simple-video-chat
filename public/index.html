@@ -45,14 +45,15 @@
 </div>
 
   </body>
-
-    <script src="http://cdn.peerjs.com/0.3/peer.min.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://simple-video-chat-srhpec.c9users.io/peer.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+/*
       var peer = new Peer({
         key: 'lwjd5qra8257b9' //todo: get api key
       });
-
+*/
+      var peer = new Peer({host: 'simple-video-chat-srhpec.c9users.io', port: 443, path: '/peerjs'});
       peer.on('open', function(id) {
         $('#peerId').val(id);
       });
