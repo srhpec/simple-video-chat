@@ -14,3 +14,5 @@ var server = require('http').createServer(app);
 app.use('/peerjs', require('peer').ExpressPeerServer(server, {debug: false}));
 
 server.listen(process.env.PORT);
+
+console.log(process.env.PORT);

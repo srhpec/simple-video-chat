@@ -31,12 +31,12 @@
 
 <div class="container">
   <div class="row">
-    <div class=".col-sm-3 video-size">
+    <div class="col-sm-3 video-size">
       <div class="embed-responsive embed-responsive-4by3" >
         <video class="embed-responsive-item" id="our-video" autoplay></video>
       </div>
     </div>
-      <div class=".col-sm-3 video-size">
+      <div class="col-sm-3 video-size">
       <div class="embed-responsive embed-responsive-4by3" >
         <video class="embed-responsive-item" id="their-video" autoplay></video>
       </div>
@@ -45,7 +45,7 @@
 </div>
 
   </body>
-    <script src="https://simple-video-chat-srhpec.c9users.io/peer.min.js"></script>
+    <script src="https://simple-video-chat-srhpec.c9users.io/peer.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
 /*
@@ -53,13 +53,22 @@
         key: 'lwjd5qra8257b9' //todo: get api key
       });
 */
-      var peer = new Peer({host: 'simple-video-chat-srhpec.c9users.io', port: 443, path: '/peerjs'});
+    var time = Date.now() + '';
+    
+      var peer = new Peer(time.substr(time.length - 4, 3),{
+        host: 'simple-video-chat-srhpec.c9users.io', 
+        port: 8080, 
+        path: '/peerjs'
+      });
+      
+      
       peer.on('open', function(id) {
         $('#peerId').val(id);
       });
 
       peer.on('call', function(call) {
         // Answer the call, providing our mediaStream
+        console.log('received call');
         call.answer(window.ourStream);
         listenForStream(call);
       });
@@ -74,6 +83,7 @@
 
           //make a call to another peer
           var call = peer.call(id, window.ourStream);
+          
           $('#peerIdInput').val('');
 
           listenForStream(call);
@@ -91,6 +101,7 @@
         //add stream to html
           console.log("received stream");
           $('#their-video').prop('src', URL.createObjectURL(stream));
+
         });
       }
 
